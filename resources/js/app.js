@@ -47,15 +47,15 @@ var dataController = (function() {
             return score;
         },
 
-        new_block_val: function() {
-            // chances of block 2 is 9 out of 10 times
-            var block_vals, block_val, pos;
+        new_tile_val: function() {
+            // chances of tile 2 is 9 out of 10 times
+            var tile_vals, tile_val, pos;
 
-            block_vals = [2, 2, 2, 4, 2, 2, 2, 2, 2, 2];
+            tile_vals = [2, 2, 2, 4, 2, 2, 2, 2, 2, 2];
             pos = Math.floor(Math.random() * 10);
-            block_val = block_vals[pos];
+            tile_val = tile_vals[pos];
 
-            return block_val;
+            return tile_val;
         },
 
         get_empty_locations: function(current_grid) {
@@ -90,21 +90,21 @@ var dataController = (function() {
             return game_over;
         },
 
-        new_block_location: function(empty_locations) {
-            var length, pos, block_location;
+        new_tile_location: function(empty_locations) {
+            var length, pos, tile_location;
 
             length = empty_locations.length;
             pos = Math.floor(Math.random() * 10);
-            block_location = empty_locations[pos];
+            tile_location = empty_locations[pos];
 
-            return block_location;
+            return tile_location;
         },
 
-        update_grid: function(block_val, block_location) {
+        update_grid: function(tile_val, tile_location) {
             var row, col;
-            row = block_location[0];
-            col = block_location[1];
-            grid[row][col] = block_val;
+            row = tile_location[0];
+            col = tile_location[1];
+            grid[row][col] = tile_val;
         }
     };
 })();
@@ -128,15 +128,15 @@ var uiController = (function() {
             ).innerText += current_score.toString();
         },
 
-        place_new_block: function(block_val, block_location) {
+        place_new_tile: function(tile_val, tile_location) {
             var new_tile = DOMStrings.tile;
-            var new_score_class = DOMStrings.score_class + block_val.toString();
+            var new_score_class = DOMStrings.score_class + tile_val.toString();
 
-            block_location.forEach(function(cur) {
+            tile_location.forEach(function(cur) {
                 new_tile += cur.toString();
             });
 
-            document.querySelector(new_tile).innerText = block_val.toString();
+            document.querySelector(new_tile).innerText = tile_val.toString();
             document.querySelector(new_tile).classList.toggle(new_score_class);
         }
     };
@@ -147,8 +147,8 @@ var uiController = (function() {
 var controller = (function(dataCtrl, uiCtrl) {
     // Code goes here
 
-    var new_block = function() {
-        var current_grid, empty_locations, game_over, block_val;
+    var new_tile = function() {
+        var current_grid, empty_locations, game_over, tile_val;
 
         current_grid = dataCtrl.get_current_grid();
         console.log(current_grid);
@@ -156,14 +156,14 @@ var controller = (function(dataCtrl, uiCtrl) {
         game_over = dataCtrl.check_game_over(empty_locations);
 
         if (!game_over) {
-            block_val = dataCtrl.new_block_val();
+            tile_val = dataCtrl.new_tile_val();
 
-            var block_location;
-            block_location = dataCtrl.new_block_location(empty_locations);
+            var tile_location;
+            tile_location = dataCtrl.new_tile_location(empty_locations);
 
-            uiCtrl.place_new_block(block_val, block_location);
+            uiCtrl.place_new_tile(tile_val, tile_location);
 
-            dataCtrl.update_grid(block_val, block_location);
+            dataCtrl.update_grid(tile_val, tile_location);
         }
     };
 
@@ -185,11 +185,11 @@ var controller = (function(dataCtrl, uiCtrl) {
             // update the score on the UI
             uiCtrl.display_score(dataCtrl.get_score());
 
-            // new block
-            new_block();
-            // new_block();
-            // new_block();
-            // new_block();
+            // new tile
+            new_tile();
+            // new_tile();
+            // new_tile();
+            // new_tile();
         }
     };
 })(dataController, uiController);
