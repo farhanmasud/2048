@@ -19,7 +19,7 @@ var dataController = (function() {
 
     return {
         init_grid: function(height, width) {
-            // var grid = [];
+            grid = [];
             var grid_row;
 
             for (var i = 0; i < height; i++) {
@@ -94,7 +94,7 @@ var dataController = (function() {
             var length, pos, tile_location;
 
             length = empty_locations.length;
-            pos = Math.floor(Math.random() * 10);
+            pos = Math.floor(Math.random() * length);
             tile_location = empty_locations[pos];
 
             return tile_location;
@@ -115,29 +115,74 @@ var uiController = (function() {
     // Code goes here
     var DOMStrings = {
         tile: "#tile-",
-        score_box: ".score",
-        score_class: "value-"
+        score_box: "#score",
+        score_class: "value-",
+        new_game: "#new-game"
     };
 
     return {
         DOMStrings: DOMStrings,
 
+        display_grid: function(current_grid) {
+            var height, width;
+
+            height = current_grid.length;
+            width = current_grid[0].length;
+
+            for (var i = 0; i < height; i++) {
+                for (var j = 0; j < width; j++) {
+                    // innertext of the tile
+                    // get value of the existing tile
+                    // if not zero
+                    // then remove the value class
+                    // add the new value class
+                    var tile_val = current_grid[i][j];
+                    var tile_location = [i, j];
+                    this.place_new_tile(tile_val, tile_location);
+                }
+            }
+        },
+
         display_score: function(current_score) {
-            document.querySelector(
-                DOMStrings.score_box
-            ).innerText += current_score.toString();
+            document.querySelector(DOMStrings.score_box).innerText =
+                "SCORE: " + current_score.toString();
         },
 
         place_new_tile: function(tile_val, tile_location) {
-            var new_tile = DOMStrings.tile;
+            // console.log(tile_location);
+            var new_tile_id = DOMStrings.tile;
+
             var new_score_class = DOMStrings.score_class + tile_val.toString();
 
             tile_location.forEach(function(cur) {
-                new_tile += cur.toString();
+                new_tile_id += cur.toString();
             });
 
-            document.querySelector(new_tile).innerText = tile_val.toString();
-            document.querySelector(new_tile).classList.toggle(new_score_class);
+            var new_tile = document.querySelector(new_tile_id);
+
+            var classes = new_tile.classList;
+            var value_class = "";
+
+            // console.log(classes);
+            classes.forEach(function(element) {
+                if (element.includes("value")) {
+                    // console.log(element);
+                    value_class = element;
+                }
+            });
+
+            // console.log(value_class);
+
+            if (value_class !== "") {
+                new_tile.classList.remove(value_class);
+            }
+
+            if (tile_val !== 0) {
+                new_tile.classList.add(new_score_class);
+                new_tile.innerText = tile_val.toString();
+            } else {
+                new_tile.innerText = "";
+            }
         }
     };
 })();
@@ -145,13 +190,46 @@ var uiController = (function() {
 // Main Controller
 
 var controller = (function(dataCtrl, uiCtrl) {
-    // Code goes here
+    var DOM = uiCtrl.DOMStrings;
+
+    var init = function() {
+        console.log("Hi, I am init function");
+
+        // initialize the grid with height and row
+        dataCtrl.init_grid(4, 4);
+
+        // show the grid for testing
+        dataCtrl.show_current_grid();
+
+        // display grid
+        uiCtrl.display_grid(dataCtrl.get_current_grid());
+
+        // set the score to 0
+        dataCtrl.init_score();
+
+        // console.log(dataCtrl.get_score());
+
+        // update the score on the UI
+        uiCtrl.display_score(dataCtrl.get_score());
+
+        // new tile
+        new_tile();
+        // new_tile();
+        // new_tile();
+        // new_tile();
+
+        setUpEventListeners();
+    };
+
+    var setUpEventListeners = function() {
+        document.querySelector(DOM.new_game).addEventListener("click", init);
+    };
 
     var new_tile = function() {
         var current_grid, empty_locations, game_over, tile_val;
 
         current_grid = dataCtrl.get_current_grid();
-        console.log(current_grid);
+        // console.log(current_grid);
         empty_locations = dataCtrl.get_empty_locations(current_grid);
         game_over = dataCtrl.check_game_over(empty_locations);
 
@@ -168,29 +246,7 @@ var controller = (function(dataCtrl, uiCtrl) {
     };
 
     return {
-        init: function() {
-            console.log("Hi, I am init function");
-
-            // initialize the grid with height and row
-            dataCtrl.init_grid(4, 4);
-
-            // show the grid for testing
-            dataCtrl.show_current_grid();
-
-            // set the score to 0
-            dataCtrl.init_score();
-
-            // console.log(dataCtrl.get_score());
-
-            // update the score on the UI
-            uiCtrl.display_score(dataCtrl.get_score());
-
-            // new tile
-            new_tile();
-            // new_tile();
-            // new_tile();
-            // new_tile();
-        }
+        init: init
     };
 })(dataController, uiController);
 
