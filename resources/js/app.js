@@ -18,93 +18,93 @@ var dataController = (function() {
     var score = 0;
 
     return {
-        init_grid: function(height, width) {
+        initGrid: function(height, width) {
             grid = [];
-            var grid_row;
+            var gridRow;
 
             for (var i = 0; i < height; i++) {
-                grid_row = new Array(width).fill(0);
-                grid.push(grid_row);
+                gridRow = new Array(width).fill(0);
+                grid.push(gridRow);
             }
         },
 
-        get_current_grid: function() {
+        getCurrentGrid: function() {
             return grid;
         },
 
         // testing function for displaying current grid
-        show_current_grid: function() {
+        showCurrentGrid: function() {
             console.log(grid);
         },
 
-        calculate_score: function() {},
+        calculateScore: function() {},
 
-        init_score: function() {
+        initScore: function() {
             score = 0;
         },
 
-        get_score: function() {
+        getScore: function() {
             return score;
         },
 
-        new_tile_val: function() {
+        newTileVal: function() {
             // chances of tile 2 is 9 out of 10 times
-            var tile_vals, tile_val, pos;
+            var tileVals, tileVal, pos;
 
-            tile_vals = [2, 2, 2, 4, 2, 2, 2, 2, 2, 2];
+            tileVals = [2, 2, 2, 4, 2, 2, 2, 2, 2, 2];
             pos = Math.floor(Math.random() * 10);
-            tile_val = tile_vals[pos];
+            tileVal = tileVals[pos];
 
-            return tile_val;
+            return tileVal;
         },
 
-        get_empty_locations: function(current_grid) {
-            var empty_locations, empty_location;
+        getEmptyLocations: function(currentGrid) {
+            var emptyLocations, emptyLocation;
 
-            empty_locations = [];
+            emptyLocations = [];
 
-            height = current_grid.length;
-            width = current_grid[0].length;
+            height = currentGrid.length;
+            width = currentGrid[0].length;
 
             for (var i = 0; i < height; i++) {
                 for (var j = 0; j < width; j++) {
-                    if (current_grid[i][j] === 0) {
-                        empty_location = [i, j]; // row, column
-                        empty_locations.push(empty_location);
+                    if (currentGrid[i][j] === 0) {
+                        emptyLocation = [i, j]; // row, column
+                        emptyLocations.push(emptyLocation);
                     }
                 }
             }
 
-            return empty_locations;
+            return emptyLocations;
         },
 
-        check_game_over: function(empty_locations) {
-            var game_over;
+        checkGameOver: function(emptyLocations) {
+            var gameOver;
 
-            game_over = false;
+            gameOver = false;
 
-            if (empty_locations.length === 0) {
-                game_over = true;
+            if (emptyLocations.length === 0) {
+                gameOver = true;
             }
 
-            return game_over;
+            return gameOver;
         },
 
-        new_tile_location: function(empty_locations) {
-            var length, pos, tile_location;
+        newTileLocation: function(emptyLocations) {
+            var length, pos, tileLocation;
 
-            length = empty_locations.length;
+            length = emptyLocations.length;
             pos = Math.floor(Math.random() * length);
-            tile_location = empty_locations[pos];
+            tileLocation = emptyLocations[pos];
 
-            return tile_location;
+            return tileLocation;
         },
 
-        update_grid: function(tile_val, tile_location) {
+        updateGrid: function(tileVal, tileLocation) {
             var row, col;
-            row = tile_location[0];
-            col = tile_location[1];
-            grid[row][col] = tile_val;
+            row = tileLocation[0];
+            col = tileLocation[1];
+            grid[row][col] = tileVal;
         }
     };
 })();
@@ -115,19 +115,38 @@ var uiController = (function() {
     // Code goes here
     var DOMStrings = {
         tile: "#tile-",
-        score_box: "#score",
-        score_class: "value-",
-        new_game: "#new-game"
+        scoreBox: "#score",
+        scoreClass: "value-",
+        newGame: "#new-game"
     };
+
+    var findClassIfExists = function(classes, classToFind) {
+        // console.log(classes);
+        var foundClass = "";
+        classes.forEach(function(element) {
+            if (element.includes(classToFind)) {
+                // console.log(element);
+                foundClass = element.toString();
+            }
+        });
+
+        return foundClass;
+    };
+
+    // var removeClassIfExists = function(domObject, classToRemove) {
+    //     if (classToRemove !== "") {
+    //         domObject.classList.remove(classToRemove);
+    //     }
+    // };
 
     return {
         DOMStrings: DOMStrings,
 
-        display_grid: function(current_grid) {
+        displayGrid: function(currentGrid) {
             var height, width;
 
-            height = current_grid.length;
-            width = current_grid[0].length;
+            height = currentGrid.length;
+            width = currentGrid[0].length;
 
             for (var i = 0; i < height; i++) {
                 for (var j = 0; j < width; j++) {
@@ -136,52 +155,50 @@ var uiController = (function() {
                     // if not zero
                     // then remove the value class
                     // add the new value class
-                    var tile_val = current_grid[i][j];
-                    var tile_location = [i, j];
-                    this.place_new_tile(tile_val, tile_location);
+                    var tileVal = currentGrid[i][j];
+                    var tileLocation = [i, j];
+                    this.placeNewTile(tileVal, tileLocation);
                 }
             }
         },
 
-        display_score: function(current_score) {
-            document.querySelector(DOMStrings.score_box).innerText =
-                "SCORE: " + current_score.toString();
+        displayScore: function(currentScore) {
+            document.querySelector(DOMStrings.scoreBox).innerText =
+                "SCORE: " + currentScore.toString();
         },
 
-        place_new_tile: function(tile_val, tile_location) {
-            // console.log(tile_location);
-            var new_tile_id = DOMStrings.tile;
+        placeNewTile: function(tileVal, tileLocation) {
+            // console.log(tileLocation);
+            var newTileId = DOMStrings.tile;
 
-            var new_score_class = DOMStrings.score_class + tile_val.toString();
+            var newScoreClass = DOMStrings.scoreClass + tileVal.toString();
 
-            tile_location.forEach(function(cur) {
-                new_tile_id += cur.toString();
+            tileLocation.forEach(function(cur) {
+                newTileId += cur.toString();
             });
 
-            var new_tile = document.querySelector(new_tile_id);
+            var newTile = document.querySelector(newTileId);
 
-            var classes = new_tile.classList;
-            var value_class = "";
+            newTile.classList.remove("animated", "bounceInDown");
 
-            // console.log(classes);
-            classes.forEach(function(element) {
-                if (element.includes("value")) {
-                    // console.log(element);
-                    value_class = element;
-                }
-            });
+            var classes = newTile.classList;
+            var valueClass = "";
 
-            // console.log(value_class);
+            valueClass = findClassIfExists(classes, "value");
 
-            if (value_class !== "") {
-                new_tile.classList.remove(value_class);
+            console.log(valueClass);
+
+            if (valueClass !== "") {
+                newTile.classList.remove(valueClass);
             }
 
-            if (tile_val !== 0) {
-                new_tile.classList.add(new_score_class);
-                new_tile.innerText = tile_val.toString();
+            if (tileVal !== 0) {
+                newTile.classList.add(newScoreClass);
+                newTile.innerText = tileVal.toString();
+
+                newTile.classList.add("animated", "bounceInDown");
             } else {
-                new_tile.innerText = "";
+                newTile.innerText = "";
             }
         }
     };
@@ -196,52 +213,52 @@ var controller = (function(dataCtrl, uiCtrl) {
         console.log("Hi, I am init function");
 
         // initialize the grid with height and row
-        dataCtrl.init_grid(4, 4);
+        dataCtrl.initGrid(4, 4);
 
         // show the grid for testing
-        dataCtrl.show_current_grid();
+        dataCtrl.showCurrentGrid();
 
         // display grid
-        uiCtrl.display_grid(dataCtrl.get_current_grid());
+        uiCtrl.displayGrid(dataCtrl.getCurrentGrid());
 
         // set the score to 0
-        dataCtrl.init_score();
+        dataCtrl.initScore();
 
-        // console.log(dataCtrl.get_score());
+        // console.log(dataCtrl.getScore());
 
         // update the score on the UI
-        uiCtrl.display_score(dataCtrl.get_score());
+        uiCtrl.displayScore(dataCtrl.getScore());
 
         // new tile
-        new_tile();
-        // new_tile();
-        // new_tile();
-        // new_tile();
+        newTile();
+        // newTile();
+        // newTile();
+        // newTile();
 
         setUpEventListeners();
     };
 
     var setUpEventListeners = function() {
-        document.querySelector(DOM.new_game).addEventListener("click", init);
+        document.querySelector(DOM.newGame).addEventListener("click", init);
     };
 
-    var new_tile = function() {
-        var current_grid, empty_locations, game_over, tile_val;
+    var newTile = function() {
+        var currentGrid, emptyLocations, gameOver, tileVal;
 
-        current_grid = dataCtrl.get_current_grid();
-        // console.log(current_grid);
-        empty_locations = dataCtrl.get_empty_locations(current_grid);
-        game_over = dataCtrl.check_game_over(empty_locations);
+        currentGrid = dataCtrl.getCurrentGrid();
+        // console.log(currentGrid);
+        emptyLocations = dataCtrl.getEmptyLocations(currentGrid);
+        gameOver = dataCtrl.checkGameOver(emptyLocations);
 
-        if (!game_over) {
-            tile_val = dataCtrl.new_tile_val();
+        if (!gameOver) {
+            tileVal = dataCtrl.newTileVal();
 
-            var tile_location;
-            tile_location = dataCtrl.new_tile_location(empty_locations);
+            var tileLocation;
+            tileLocation = dataCtrl.newTileLocation(emptyLocations);
 
-            uiCtrl.place_new_tile(tile_val, tile_location);
+            uiCtrl.placeNewTile(tileVal, tileLocation);
 
-            dataCtrl.update_grid(tile_val, tile_location);
+            dataCtrl.updateGrid(tileVal, tileLocation);
         }
     };
 
