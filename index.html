@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="vendors/css/grid.css">
-    <link rel="stylesheet" href="vendors/css/animate.css">
+    <!-- <link rel="stylesheet" href="vendors/css/animate.css"> -->
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="shortcut icon" href="resources/favicons/favicon.ico" type="image/x-icon">
     <title>2048</title>
@@ -46,6 +46,30 @@
         </div>
     </div>
 
+    </div>
+
+    <div id="gameOverModal" class="modal" style="display: none;">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="closeGameOver">&times;</span>
+                <h2>GAME OVER!</h2>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="winModal" class="modal" style="display: none;">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="closeWin">&times;</span>
+                <h2>YOU WIN!!</h2>
+
+            </div>
+        </div>
     </div>
 
     <script src="resources/js/app.js"></script>
