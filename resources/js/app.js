@@ -138,7 +138,7 @@ var dataController = (function() {
                 // check if there are any adjacent tiles of same values
                 // so that they can be moved
 
-                for (var i = 1; i <= grid.length - 1; i++) {
+                for (var i = 0; i < grid.length; i++) {
                     if (hasSameAdjacentVal) {
                         // gameOver = false;
                         break;
@@ -255,7 +255,7 @@ var uiController = (function() {
 
             valueClass = findClassIfExists(classes, "value");
 
-            console.log(valueClass);
+            // console.log(valueClass);
 
             if (valueClass !== "") {
                 newTile.classList.remove(valueClass);
@@ -329,7 +329,7 @@ var controller = (function(dataCtrl, uiCtrl) {
         dataCtrl.initGrid(4, 4);
 
         // show the grid for testing
-        dataCtrl.showCurrentGrid();
+        // dataCtrl.showCurrentGrid();
 
         // display grid
         uiCtrl.displayGrid(dataCtrl.getCurrentGrid());
@@ -359,41 +359,37 @@ var controller = (function(dataCtrl, uiCtrl) {
 
         document.addEventListener("keydown", function(event) {
             if (event.code === "ArrowLeft") {
-                console.log("Left");
+                // console.log("Left");
                 move("left");
             } else if (event.code === "ArrowRight") {
-                console.log("Right");
+                // console.log("Right");
                 move("right");
             } else if (event.code === "ArrowUp") {
-                console.log("Up");
+                // console.log("Up");
                 move("up");
             } else if (event.code === "ArrowDown") {
-                console.log("Down");
+                // console.log("Down");
                 move("down");
             }
         });
     };
 
     var newTile = function() {
-        var currentGrid, emptyLocations, gameOver, tileVal;
+        var currentGrid, emptyLocations, tileVal;
 
         currentGrid = dataCtrl.getCurrentGrid();
         // console.log(currentGrid);
         emptyLocations = dataCtrl.getEmptyLocations(currentGrid);
-        gameOver = dataCtrl.checkGameOver(emptyLocations);
 
-        if (!gameOver) {
-            tileVal = dataCtrl.newTileVal();
+        tileVal = dataCtrl.newTileVal();
 
-            var tileLocation;
-            tileLocation = dataCtrl.newTileLocation(emptyLocations);
+        var tileLocation;
+        tileLocation = dataCtrl.newTileLocation(emptyLocations);
 
-            uiCtrl.placeNewTile(tileVal, tileLocation, "bounceInDown");
+        // uiCtrl.placeNewTile(tileVal, tileLocation, "bounceInDown");
+        uiCtrl.placeNewTile(tileVal, tileLocation);
 
-            dataCtrl.updateGrid(tileVal, tileLocation);
-        } else {
-            console.log("Game over, bruh");
-        }
+        dataCtrl.updateGrid(tileVal, tileLocation);
     };
 
     var move = function(direction) {
@@ -428,7 +424,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                                 break;
                             } else {
                                 hasMoved = true;
-                                console.log("moving");
+                                // console.log("moving");
                                 currentGrid[i][k] = currentGrid[i][k + 1];
                                 currentGrid[i][k + 1] = 0;
 
@@ -448,7 +444,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                         continue;
                     } else if (currentGrid[i][j] === currentGrid[i][j + 1]) {
                         hasMoved = true;
-                        console.log("moving moving");
+                        // console.log("moving moving");
                         var addedValue = currentGrid[i][j] * 2;
                         currentGrid[i][j] = addedValue;
                         currentGrid[i][j + 1] = 0;
@@ -487,7 +483,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                                 break;
                             } else {
                                 hasMoved = true;
-                                console.log("moving");
+                                // console.log("moving");
                                 currentGrid[i][k] = currentGrid[i][k - 1];
                                 currentGrid[i][k - 1] = 0;
 
@@ -507,7 +503,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                         continue;
                     } else if (currentGrid[i][j] === currentGrid[i][j - 1]) {
                         hasMoved = true;
-                        console.log("moving moving");
+                        // console.log("moving moving");
                         var addedValue = currentGrid[i][j] * 2;
                         currentGrid[i][j] = addedValue;
                         currentGrid[i][j - 1] = 0;
@@ -546,7 +542,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                                 break;
                             } else {
                                 hasMoved = true;
-                                console.log("moving");
+                                // console.log("moving");
                                 currentGrid[k][j] = currentGrid[k + 1][j];
                                 currentGrid[k + 1][j] = 0;
 
@@ -566,7 +562,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                         continue;
                     } else if (currentGrid[i][j] === currentGrid[i + 1][j]) {
                         hasMoved = true;
-                        console.log("moving moving");
+                        // console.log("moving moving");
                         var addedValue = currentGrid[i][j] * 2;
                         currentGrid[i][j] = addedValue;
                         currentGrid[i + 1][j] = 0;
@@ -603,7 +599,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                                 break;
                             } else {
                                 hasMoved = true;
-                                console.log("moving");
+                                // console.log("moving");
                                 currentGrid[k][j] = currentGrid[k - 1][j];
                                 currentGrid[k - 1][j] = 0;
 
@@ -623,7 +619,7 @@ var controller = (function(dataCtrl, uiCtrl) {
                         continue;
                     } else if (currentGrid[i][j] === currentGrid[i - 1][j]) {
                         hasMoved = true;
-                        console.log("moving moving");
+                        // console.log("moving moving");
 
                         var addedValue = currentGrid[i][j] * 2;
                         currentGrid[i][j] = addedValue;
@@ -656,9 +652,9 @@ var controller = (function(dataCtrl, uiCtrl) {
             newTile();
         }
 
-        // now check if game over or not
+        // dataCtrl.showCurrentGrid();
 
-        dataCtrl.showCurrentGrid();
+        // now check if game over or not
 
         var gameOver = dataCtrl.checkGameOver(
             dataCtrl.getEmptyLocations(dataCtrl.getCurrentGrid())
